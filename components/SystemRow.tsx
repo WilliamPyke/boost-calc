@@ -39,9 +39,9 @@ export const SystemRow: FC<SystemRowProps> = ({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-semibold tracking-tight text-text-primary flex items-center gap-2 font-display">
-          {icon && <img src={icon} alt="" className="w-4 h-4 opacity-70" />}
+      <div className="flex justify-between items-center mb-1.5 sm:mb-2">
+        <span className="text-xs sm:text-sm font-semibold tracking-tight text-text-primary flex items-center gap-1.5 sm:gap-2 font-display">
+          {icon && <img src={icon} alt="" className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-70" />}
           {label}
         </span>
         
@@ -51,11 +51,11 @@ export const SystemRow: FC<SystemRowProps> = ({
           inputMode="decimal"
           value={formatNumber(value)}
           onChange={(e) => onValueChange(parseNumber(e.target.value))}
-          className="w-32 text-right text-sm font-semibold tracking-tight tabular-nums bg-transparent text-text-secondary border-b border-transparent hover:border-surface-4 focus:border-brand-pink focus:text-text-primary focus:outline-none transition-colors p-0 font-mono"
+          className="w-24 sm:w-32 text-right text-xs sm:text-sm font-semibold tracking-tight tabular-nums bg-transparent text-text-secondary border-b border-transparent hover:border-surface-4 focus:border-brand-pink focus:text-text-primary focus:outline-none transition-colors p-0 font-mono"
         />
       </div>
       
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* Slider */}
         <div className="flex-grow">
           <Slider 
@@ -69,7 +69,7 @@ export const SystemRow: FC<SystemRowProps> = ({
 
         {/* Editable Max Range */}
         <div className="flex flex-col items-end">
-          <span className="text-[9px] text-text-muted uppercase font-semibold tracking-wider font-display">Max</span>
+          <span className="text-[8px] sm:text-[9px] text-text-muted uppercase font-semibold tracking-wider font-display">Max</span>
           <input 
             type="text"
             inputMode="text"
@@ -77,7 +77,7 @@ export const SystemRow: FC<SystemRowProps> = ({
             onChange={(e) => setMaxInput(e.target.value)}
             onFocus={() => setIsMaxFocused(true)}
             onBlur={handleMaxBlur}
-            className="w-16 text-right text-xs font-medium text-text-muted bg-surface-2 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-brand-pink font-mono"
+            className="w-14 sm:w-16 text-right text-[10px] sm:text-xs font-medium text-text-muted bg-surface-2 rounded px-1 sm:px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-brand-pink font-mono"
           />
         </div>
       </div>
