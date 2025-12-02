@@ -287,7 +287,7 @@ const App = () => {
                   systemTotalsOpen ? 'max-h-64 opacity-100 mt-3 sm:mt-4' : 'max-h-0 opacity-0'
                 }`}
               >
-                <div className="flex flex-col gap-4 sm:gap-6 pb-2">
+                <div className="flex flex-col gap-4 sm:gap-6 pb-2 px-1">
                   <SystemRow 
                     label="veBTC"
                     icon="/vebtc.svg"
@@ -383,6 +383,23 @@ const App = () => {
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7V17" />
           </svg>
+        </a>
+        
+        {/* Built by Mallard Labs */}
+        <a
+          href="https://mallardlabs.xyz"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 py-2 group"
+        >
+          <span className="text-[10px] sm:text-xs text-white font-display opacity-60 group-hover:opacity-100 transition-opacity dark:text-white invert dark:invert-0">
+            Built by
+          </span>
+          <img 
+            src="/mallardlabs_logo.svg" 
+            alt="Mallard Labs" 
+            className="h-2.5 sm:h-3 opacity-60 group-hover:opacity-100 transition-opacity dark:invert-0 invert"
+          />
         </a>
       </div>
 
