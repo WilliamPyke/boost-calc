@@ -357,11 +357,17 @@ const App = () => {
               </div>
               
               {/* Hint */}
-              {lockState === LockState.NONE && (
-                <p className="text-[10px] sm:text-xs text-text-muted mt-3 sm:mt-4 text-center font-display">
+              <div 
+                className={`hint-container overflow-hidden transition-all duration-300 ease-out ${
+                  lockState === LockState.NONE 
+                    ? 'max-h-12 opacity-100 mt-3 sm:mt-4' 
+                    : 'max-h-0 opacity-0 mt-0'
+                }`}
+              >
+                <p className="text-[10px] sm:text-xs text-text-muted text-center font-display">
                   Lock one input to adjust boost target
                 </p>
-              )}
+              </div>
             </div>
           </div>
         </div>
