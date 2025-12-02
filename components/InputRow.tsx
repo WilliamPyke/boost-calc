@@ -42,17 +42,18 @@ export const InputRow: FC<InputRowProps> = ({
           ? 'bg-surface-2 ring-1 ring-surface-3' 
           : 'bg-white ring-2 ring-brand-pink/30 shadow-glow-sm'
       }`}>
-        {/* Label Badge - Left side */}
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-          <span className={`font-semibold text-xs px-2.5 py-1.5 rounded-lg tracking-wide flex items-center gap-1.5 font-display transition-colors ${
-            readOnly 
-              ? 'bg-surface-3 text-text-muted' 
-              : 'bg-brand-pink/10 text-brand-pink'
-          }`}>
-            {icon && <img src={icon} alt="" className="w-3.5 h-3.5 opacity-80" />}
-            {label}
-          </span>
-        </div>
+        {/* Lock Button - Left side */}
+        <button 
+          onClick={onToggleLock}
+          className={`absolute left-3 top-1/2 -translate-y-1/2 transition-all duration-200 p-2 rounded-lg ${
+            isLocked 
+              ? 'bg-surface-3 text-text-muted hover:bg-surface-4' 
+              : 'bg-brand-pink text-white shadow-glow-sm hover:bg-brand-glow'
+          }`}
+          title={isLocked ? "Unlock (Enable Editing)" : "Lock (Calculate this value)"}
+        >
+          {isLocked ? <Lock size={14} /> : <Unlock size={14} />}
+        </button>
 
         <input
           ref={inputRef}
@@ -62,23 +63,22 @@ export const InputRow: FC<InputRowProps> = ({
           onChange={handleChange}
           readOnly={readOnly}
           placeholder="0"
-          className={`w-full h-full bg-transparent text-right text-2xl font-semibold pl-28 pr-16 outline-none placeholder-text-muted/50 transition-colors font-mono ${
+          className={`w-full h-full bg-transparent text-right text-2xl font-semibold pl-16 pr-28 outline-none placeholder-text-muted/50 transition-colors font-mono ${
             readOnly ? 'text-text-muted cursor-default' : 'text-text-primary'
           }`}
         />
         
-        {/* Lock Button - Right side */}
-        <button 
-          onClick={onToggleLock}
-          className={`absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-200 p-2 rounded-lg ${
-            isLocked 
-              ? 'bg-surface-3 text-text-muted hover:bg-surface-4' 
-              : 'bg-brand-pink text-white shadow-glow-sm hover:bg-brand-glow'
-          }`}
-          title={isLocked ? "Unlock (Enable Editing)" : "Lock (Calculate this value)"}
-        >
-          {isLocked ? <Lock size={14} /> : <Unlock size={14} />}
-        </button>
+        {/* Label Badge - Right side */}
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+          <span className={`font-semibold text-xs px-2.5 py-1.5 rounded-lg tracking-wide flex items-center gap-1.5 font-display transition-colors ${
+            readOnly 
+              ? 'bg-surface-3 text-text-muted' 
+              : 'bg-brand-pink/10 text-brand-pink'
+          }`}>
+            {icon && <img src={icon} alt="" className="w-3.5 h-3.5 opacity-80" />}
+            {label}
+          </span>
+        </div>
       </div>
       
     </div>
