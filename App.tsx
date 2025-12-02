@@ -529,6 +529,54 @@ const App = () => {
                 This helps you model different scenarios as the protocol grows.
               </p>
             </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-surface-3 to-transparent" />
+
+            {/* Advanced Users */}
+            <div className="space-y-1.5 sm:space-y-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-brand-pink flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                </svg>
+                <h3 className="text-xs sm:text-sm font-semibold text-text-primary font-display">Are you an advanced user?</h3>
+              </div>
+              <p className="text-[11px] sm:text-xs text-text-secondary leading-relaxed font-display">
+                For more detailed calculations and custom scenarios, make a copy of the Google Sheet below.
+              </p>
+              <a 
+                href="https://docs.google.com/spreadsheets/d/1l7ZVt9rWgiocqWa2GPxnN1S3_p0yH3edkAoidvofVyw/edit?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 sm:mt-3 flex items-center justify-between p-2.5 sm:p-3 bg-surface-2 hover:bg-surface-3 rounded-lg border border-surface-3 hover:border-brand-pink/30 transition-all group"
+              >
+                <div className="flex items-center gap-2 sm:gap-2.5">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#0F9D58] flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 11V9h-4V5h-2v4H9V5H7v4H3v2h4v4H3v2h4v4h2v-4h4v4h2v-4h4v-2h-4v-4h4zm-6 4H9v-4h4v4z"/>
+                  </svg>
+                  <div>
+                    <p className="text-[11px] sm:text-xs font-semibold text-text-primary font-display group-hover:text-brand-pink transition-colors">
+                      Advanced Calculator Sheet
+                    </p>
+                    <p className="text-[9px] sm:text-[10px] text-text-muted font-display">
+                      Make a copy to input your values
+                    </p>
+                  </div>
+                </div>
+                <svg 
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-muted group-hover:text-brand-pink transition-colors" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+              <p className="text-[9px] sm:text-[10px] text-text-muted font-display italic mt-1.5">
+                Note: The Google Sheet is a tool to explore hypothetical scenarios.  
+              </p>
+            </div>
           </div>
         </div>
       </div>
