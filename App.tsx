@@ -310,12 +310,21 @@ const App = () => {
             </div>
             
             {/* Scale markers */}
-            <div className="flex justify-between text-xs font-medium mt-3 text-text-muted font-mono px-0.5">
-              <span>1×</span>
-              <span>2×</span>
-              <span>3×</span>
-              <span>4×</span>
-              <span>5×</span>
+            <div className={`flex justify-between text-xs font-medium mt-3 font-mono px-0.5 ${lockState === LockState.NONE ? 'opacity-30' : ''}`}>
+              {[1, 2, 3, 4, 5].map((val) => (
+                <button
+                  key={val}
+                  onClick={() => lockState !== LockState.NONE && handleBoostChange(val)}
+                  disabled={lockState === LockState.NONE}
+                  className={`transition-colors ${
+                    lockState !== LockState.NONE 
+                      ? 'hover:text-brand-pink cursor-pointer' 
+                      : 'cursor-not-allowed'
+                  } ${Math.round(boost) === val ? 'text-brand-pink' : 'text-text-muted'}`}
+                >
+                  {val}×
+                </button>
+              ))}
             </div>
             
             {/* Hint */}
