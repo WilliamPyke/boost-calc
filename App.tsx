@@ -9,7 +9,15 @@ import { LockState } from './types';
 const INITIAL_TOTAL_VEMEZO = 150000000;
 const INITIAL_TOTAL_VEBTC = 2933.3;
 const INITIAL_BTC = '21';
-const INITIAL_MEZO = '102273.89';
+const INITIAL_BOOST = 5.0;
+
+// Calculate initial MEZO from BTC and target boost
+// Formula: Mezo = (Boost - 1) * TotalMEZO * UserBTC / (4 * TotalBTC)
+const calcInitialMezo = () => {
+  const btc = parseFloat(INITIAL_BTC);
+  const boostCalc = INITIAL_BOOST - 1;
+  return (boostCalc * INITIAL_TOTAL_VEMEZO * btc) / (4 * INITIAL_TOTAL_VEBTC);
+};
 
 const App = () => {
   // --------------------------------------------------------------------------
@@ -38,7 +46,7 @@ const App = () => {
   
   const [lockState, setLockState] = useState<LockState>(LockState.MEZO);
   
-  const [userMezo, setUserMezo] = useState<string>(INITIAL_MEZO);
+  const [userMezo, setUserMezo] = useState<string>(() => formatNumber(calcInitialMezo()));
   const [userBtc, setUserBtc] = useState<string>(INITIAL_BTC);
   
   const [totalVeMezo, setTotalVeMezo] = useState<number>(INITIAL_TOTAL_VEMEZO);
@@ -48,7 +56,7 @@ const App = () => {
   const [maxVeMezo, setMaxVeMezo] = useState<number>(500000000);
   const [maxVeBtc, setMaxVeBtc] = useState<number>(10000);
   
-  const [boost, setBoost] = useState<number>(5.0);
+  const [boost, setBoost] = useState<number>(INITIAL_BOOST);
   
   // Collapsible section state
   const [systemTotalsOpen, setSystemTotalsOpen] = useState<boolean>(false);
