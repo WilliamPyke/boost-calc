@@ -21,31 +21,29 @@ export const SystemRow: FC<SystemRowProps> = ({
 }) => {
   return (
     <div>
-      <div className="flex justify-between items-center mb-1">
-        <span className="text-xl font-bold tracking-tight text-black flex items-center gap-2">
-          {icon && <img src={icon} alt="" className="w-5 h-5" />}
+      <div className="flex justify-between items-center mb-2">
+        <span className="text-sm font-semibold tracking-tight text-text-primary flex items-center gap-2 font-display">
+          {icon && <img src={icon} alt="" className="w-4 h-4 opacity-70" />}
           {label}
         </span>
         
         {/* Editable Current Value */}
-        <div className="relative group">
-          <input 
-            type="text"
-            inputMode="decimal"
-            value={formatNumber(value)}
-            onChange={(e) => onValueChange(parseNumber(e.target.value))}
-            className="w-36 text-right text-xl font-bold tracking-tight tabular-nums bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-pink focus:outline-none transition-colors p-0"
-          />
-        </div>
+        <input 
+          type="text"
+          inputMode="decimal"
+          value={formatNumber(value)}
+          onChange={(e) => onValueChange(parseNumber(e.target.value))}
+          className="w-32 text-right text-sm font-semibold tracking-tight tabular-nums bg-transparent text-text-secondary border-b border-transparent hover:border-surface-4 focus:border-brand-pink focus:text-text-primary focus:outline-none transition-colors p-0 font-mono"
+        />
       </div>
       
-      <div className="flex items-center gap-4">
-        {/* Slider controls value from 0 to Max */}
+      <div className="flex items-center gap-3">
+        {/* Slider */}
         <div className="flex-grow">
           <Slider 
             min={0} 
             max={max} 
-            step={max / 1000} // Fine grained step based on range
+            step={max / 1000}
             value={value} 
             onChange={onValueChange} 
           />
@@ -53,14 +51,14 @@ export const SystemRow: FC<SystemRowProps> = ({
 
         {/* Editable Max Range */}
         <div className="flex flex-col items-end">
-            <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Max</span>
-            <input 
-                type="text"
-                inputMode="decimal"
-                value={formatNumber(max)}
-                onChange={(e) => onMaxChange(parseNumber(e.target.value))}
-                className="w-20 text-right text-xs font-bold text-gray-500 bg-gray-100 rounded px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-brand-pink"
-            />
+          <span className="text-[9px] text-text-muted uppercase font-semibold tracking-wider font-display">Max</span>
+          <input 
+            type="text"
+            inputMode="decimal"
+            value={formatNumber(max)}
+            onChange={(e) => onMaxChange(parseNumber(e.target.value))}
+            className="w-16 text-right text-xs font-medium text-text-muted bg-surface-2 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-brand-pink font-mono"
+          />
         </div>
       </div>
     </div>

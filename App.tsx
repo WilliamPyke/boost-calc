@@ -16,7 +16,7 @@ const App = () => {
   // State
   // --------------------------------------------------------------------------
   
-  const [lockState, setLockState] = useState<LockState>(LockState.BTC);
+  const [lockState, setLockState] = useState<LockState>(LockState.MEZO);
   
   const [userMezo, setUserMezo] = useState<string>(INITIAL_MEZO);
   const [userBtc, setUserBtc] = useState<string>(INITIAL_BTC);
@@ -146,103 +146,159 @@ const App = () => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl p-8 flex flex-col gap-8 font-sans">
-      
-      {/* Top Section: Inputs */}
-      <div className="flex flex-col gap-3">
-        <InputRow 
-          label="veMEZO" 
-          icon="/vemezo.svg"
-          value={userMezo} 
-          isLocked={lockState === LockState.MEZO}
-          readOnly={lockState === LockState.MEZO}
-          onToggleLock={() => toggleLock(LockState.MEZO)}
-          onChange={handleMezoChange}
-        />
-
-        <InputRow 
-          label="veBTC" 
-          icon="/vebtc.svg"
-          value={userBtc} 
-          isLocked={lockState === LockState.BTC}
-          readOnly={lockState === LockState.BTC}
-          onToggleLock={() => toggleLock(LockState.BTC)}
-          onChange={handleBtcChange}
-        />
+    <div className="w-full max-w-md">
+      {/* Header */}
+      <div className="mb-6 px-1">
+        <h1 className="text-2xl font-bold tracking-tight text-text-primary font-display">
+          veBoost Calculator
+        </h1>
+        <p className="text-sm text-text-muted mt-1 font-display">
+          Calculate your optimal veMEZO and veBTC locks
+        </p>
       </div>
 
-      {/* Middle Section: System Totals (Collapsible) */}
-      <div className="px-2">
-        <button 
-          onClick={() => setSystemTotalsOpen(!systemTotalsOpen)}
-          className="w-full flex justify-between items-center py-2 group"
-        >
-          <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">System Totals</span>
-          <svg 
-            className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${systemTotalsOpen ? 'rotate-180' : ''}`}
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        
-        <div 
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            systemTotalsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-          }`}
-        >
-          <div className="flex flex-col gap-8 pt-4 pb-2">
-            <SystemRow 
-              label="veMEZO"
-              icon="/vemezo.svg"
-              value={totalVeMezo}
-              max={maxVeMezo}
-              onValueChange={(val) => handleTotalChange(totalVeBtc, val)}
-              onMaxChange={setMaxVeMezo}
+      {/* Main Card */}
+      <div className="relative bg-surface-1 rounded-2xl border border-surface-3 shadow-card overflow-hidden">
+        <div className="relative z-10 p-6 flex flex-col gap-6">
+          
+          {/* Input Section */}
+          <div className="flex flex-col gap-3">
+            <InputRow 
+              label="veBTC" 
+              icon="/vebtc.svg"
+              value={userBtc} 
+              isLocked={lockState === LockState.BTC}
+              readOnly={lockState === LockState.BTC}
+              onToggleLock={() => toggleLock(LockState.BTC)}
+              onChange={handleBtcChange}
             />
 
-            <SystemRow 
-              label="veBTC"
-              icon="/vebtc.svg"
-              value={totalVeBtc}
-              max={maxVeBtc}
-              onValueChange={(val) => handleTotalChange(val, totalVeMezo)}
-              onMaxChange={setMaxVeBtc}
+            <InputRow 
+              label="veMEZO" 
+              icon="/vemezo.svg"
+              value={userMezo} 
+              isLocked={lockState === LockState.MEZO}
+              readOnly={lockState === LockState.MEZO}
+              onToggleLock={() => toggleLock(LockState.MEZO)}
+              onChange={handleMezoChange}
             />
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-surface-3 to-transparent" />
+
+          {/* System Totals (Collapsible) */}
+          <div>
+            <button 
+              onClick={() => setSystemTotalsOpen(!systemTotalsOpen)}
+              className="w-full flex justify-between items-center py-1 group"
+            >
+              <span className="text-xs font-semibold text-text-muted uppercase tracking-widest font-display">
+                System Totals
+              </span>
+              <svg 
+                className={`w-4 h-4 text-text-muted transition-transform duration-300 ${systemTotalsOpen ? 'rotate-180' : ''}`}
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            <div 
+              className={`overflow-hidden transition-all duration-300 ease-out ${
+                systemTotalsOpen ? 'max-h-64 opacity-100 mt-4' : 'max-h-0 opacity-0'
+              }`}
+            >
+              <div className="flex flex-col gap-6 pb-2">
+                <SystemRow 
+                  label="veBTC"
+                  icon="/vebtc.svg"
+                  value={totalVeBtc}
+                  max={maxVeBtc}
+                  onValueChange={(val) => handleTotalChange(val, totalVeMezo)}
+                  onMaxChange={setMaxVeBtc}
+                />
+
+                <SystemRow 
+                  label="veMEZO"
+                  icon="/vemezo.svg"
+                  value={totalVeMezo}
+                  max={maxVeMezo}
+                  onValueChange={(val) => handleTotalChange(totalVeBtc, val)}
+                  onMaxChange={setMaxVeMezo}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-surface-3 to-transparent" />
+
+          {/* Boost Section */}
+          <div>
+            <div className="flex justify-between items-end mb-4">
+              <span className="text-xs font-semibold text-text-muted uppercase tracking-widest font-display">
+                Your Boost
+              </span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-4xl font-bold tracking-tight tabular-nums font-mono text-brand-pink">
+                  {boost.toFixed(2)}
+                </span>
+                <span className="text-xl font-bold text-text-muted">×</span>
+              </div>
+            </div>
+            
+            {/* Slider Container */}
+            <div className={`transition-all duration-200 ${lockState === LockState.NONE ? 'opacity-30' : ''}`}>
+              <Slider 
+                min={1} 
+                max={5} 
+                step={0.01}
+                value={boost} 
+                onChange={handleBoostChange} 
+                disabled={lockState === LockState.NONE}
+              />
+            </div>
+            
+            {/* Scale markers */}
+            <div className="flex justify-between text-xs font-medium mt-3 text-text-muted font-mono px-0.5">
+              <span>1×</span>
+              <span>2×</span>
+              <span>3×</span>
+              <span>4×</span>
+              <span>5×</span>
+            </div>
+            
+            {/* Hint */}
+            {lockState === LockState.NONE && (
+              <p className="text-xs text-text-muted mt-4 text-center font-display">
+                Lock one input to adjust boost target
+              </p>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Bottom Section: Boost */}
-      <div className="pt-2 px-2">
-        <div className="flex justify-between items-baseline mb-3">
-          <span className="text-3xl font-bold tracking-tight text-black">Boost</span>
-          <span className="text-3xl font-bold tracking-tight tabular-nums">{boost.toFixed(2)}x</span>
-        </div>
-        
-        {/* Container with conditional opacity */}
-        <div className={`transition-opacity duration-200 ${lockState === LockState.NONE ? 'opacity-50 grayscale' : ''}`}>
-          <Slider 
-            min={1} 
-            max={5} 
-            step={0.01}
-            value={boost} 
-            onChange={handleBoostChange} 
-            disabled={lockState === LockState.NONE}
-          />
-        </div>
-        
-        <div className="flex justify-between text-xs font-semibold mt-3 text-gray-400 px-1">
-            <span>1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>4</span>
-            <span>5</span>
-        </div>
-      </div>
-
+      
+      {/* Footer */}
+      <a 
+        href="https://testnet.mezo.org/earn/lock" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="flex items-center justify-center gap-1.5 text-xs text-text-muted mt-4 text-center font-display hover:text-brand-pink transition-colors"
+      >
+        <span>Manage my locks</span>
+        <svg 
+          className="w-3 h-3" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+          strokeWidth={2.5}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7V17" />
+        </svg>
+      </a>
     </div>
   );
 };

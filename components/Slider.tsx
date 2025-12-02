@@ -17,18 +17,17 @@ export const Slider: FC<SliderProps> = ({ value, min, max, step = 0.01, onChange
   const percentage = max > min ? ((safeValue - min) / (max - min)) * 100 : 0;
 
   return (
-    <div className={`relative w-full h-8 flex items-center select-none touch-none isolation-auto ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}>
+    <div className={`relative w-full h-10 flex items-center select-none touch-none ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
       {/* Track Background */}
-      <div className="absolute left-0 right-0 h-1.5 bg-gray-200 rounded-full overflow-hidden pointer-events-none">
-         {/* Active Track (Pink) */}
+      <div className="absolute left-0 right-0 h-2 bg-surface-3 rounded-full overflow-hidden pointer-events-none">
+        {/* Active Track (Gradient) */}
         <div 
-          className="h-full bg-brand-pink" 
+          className="h-full bg-gradient-to-r from-brand-pink to-brand-glow transition-all duration-75" 
           style={{ width: `${percentage}%` }}
         />
       </div>
 
-      {/* Actual Input Range - Invisible but captures interaction */}
-      {/* The styling for this is largely handled in index.html to ensure cross-browser thumb sizing */}
+      {/* Actual Input Range */}
       <input
         type="range"
         min={min}
@@ -40,11 +39,15 @@ export const Slider: FC<SliderProps> = ({ value, min, max, step = 0.01, onChange
         className="opacity-0" 
       />
 
-      {/* Custom Thumb Visual - Centered on value */}
+      {/* Custom Thumb */}
       <div 
-        className={`absolute h-5 w-5 bg-white border-[3px] border-brand-pink rounded-full z-10 shadow-md pointer-events-none transition-transform ${disabled ? 'scale-75 bg-gray-100 border-gray-400' : ''}`}
+        className={`absolute h-5 w-5 rounded-full z-10 pointer-events-none transition-all duration-75 ${
+          disabled 
+            ? 'bg-surface-3 border-2 border-surface-4' 
+            : 'bg-white shadow-lg ring-2 ring-brand-pink'
+        }`}
         style={{ 
-          left: `calc(${percentage}% - 10px)` // Center the 20px thumb
+          left: `calc(${percentage}% - 10px)`
         }}
       />
     </div>
