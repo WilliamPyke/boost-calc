@@ -4,6 +4,7 @@ import { formatNumber, parseNumber } from '../utils';
 
 interface SystemRowProps {
   label: string;
+  icon?: string;
   value: number;
   max: number;
   onValueChange: (val: number) => void;
@@ -12,6 +13,7 @@ interface SystemRowProps {
 
 export const SystemRow: FC<SystemRowProps> = ({ 
   label, 
+  icon,
   value, 
   max, 
   onValueChange, 
@@ -20,7 +22,10 @@ export const SystemRow: FC<SystemRowProps> = ({
   return (
     <div>
       <div className="flex justify-between items-center mb-1">
-        <span className="text-xl font-bold tracking-tight text-black">{label}</span>
+        <span className="text-xl font-bold tracking-tight text-black flex items-center gap-2">
+          {icon && <img src={icon} alt="" className="w-5 h-5" />}
+          {label}
+        </span>
         
         {/* Editable Current Value */}
         <div className="relative group">

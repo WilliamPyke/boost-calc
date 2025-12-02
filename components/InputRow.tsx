@@ -4,6 +4,7 @@ import { Lock, Unlock } from 'lucide-react';
 interface InputRowProps {
   value: string;
   label: string;
+  icon?: string;
   isLocked: boolean;
   onToggleLock: () => void;
   onChange: (val: string) => void;
@@ -14,6 +15,7 @@ interface InputRowProps {
 export const InputRow: FC<InputRowProps> = ({ 
   value, 
   label, 
+  icon,
   isLocked, 
   onToggleLock, 
   onChange,
@@ -49,16 +51,17 @@ export const InputRow: FC<InputRowProps> = ({
           onChange={handleChange}
           readOnly={readOnly}
           placeholder="0"
-          className={`w-full h-full bg-transparent text-right text-4xl font-bold px-4 pr-24 outline-none placeholder-gray-400 transition-colors ${
+          className={`w-full h-full bg-transparent text-right text-4xl font-bold px-4 pr-36 outline-none placeholder-gray-400 transition-colors ${
             readOnly ? 'text-gray-500 cursor-default' : 'text-black'
           }`}
         />
         
         {/* Unit Badge */}
         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          <span className={`font-bold text-sm px-3 py-1.5 rounded-md uppercase tracking-wide ${
+          <span className={`font-bold text-sm px-3 py-1.5 rounded-md tracking-wide flex items-center gap-1.5 ${
             readOnly ? 'bg-gray-200 text-gray-500' : 'bg-[#dcdcdc] text-black'
           }`}>
+            {icon && <img src={icon} alt="" className="w-4 h-4" />}
             {label}
           </span>
         </div>

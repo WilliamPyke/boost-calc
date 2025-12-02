@@ -29,6 +29,9 @@ const App = () => {
   const [maxVeBtc, setMaxVeBtc] = useState<number>(10000);
   
   const [boost, setBoost] = useState<number>(5.0);
+  
+  // Collapsible section state
+  const [systemTotalsOpen, setSystemTotalsOpen] = useState<boolean>(false);
 
   // --------------------------------------------------------------------------
   // Formulae
@@ -148,7 +151,8 @@ const App = () => {
       {/* Top Section: Inputs */}
       <div className="flex flex-col gap-3">
         <InputRow 
-          label="MEZO" 
+          label="veMEZO" 
+          icon="/vemezo.svg"
           value={userMezo} 
           isLocked={lockState === LockState.MEZO}
           readOnly={lockState === LockState.MEZO}
@@ -157,7 +161,8 @@ const App = () => {
         />
 
         <InputRow 
-          label="BTC" 
+          label="veBTC" 
+          icon="/vebtc.svg"
           value={userBtc} 
           isLocked={lockState === LockState.BTC}
           readOnly={lockState === LockState.BTC}
@@ -166,23 +171,48 @@ const App = () => {
         />
       </div>
 
-      {/* Middle Section: System Totals */}
-      <div className="flex flex-col gap-8 px-2">
-        <SystemRow 
-          label="veMEZO"
-          value={totalVeMezo}
-          max={maxVeMezo}
-          onValueChange={(val) => handleTotalChange(totalVeBtc, val)}
-          onMaxChange={setMaxVeMezo}
-        />
+      {/* Middle Section: System Totals (Collapsible) */}
+      <div className="px-2">
+        <button 
+          onClick={() => setSystemTotalsOpen(!systemTotalsOpen)}
+          className="w-full flex justify-between items-center py-2 group"
+        >
+          <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">System Totals</span>
+          <svg 
+            className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${systemTotalsOpen ? 'rotate-180' : ''}`}
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <div 
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            systemTotalsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <div className="flex flex-col gap-8 pt-4 pb-2">
+            <SystemRow 
+              label="veMEZO"
+              icon="/vemezo.svg"
+              value={totalVeMezo}
+              max={maxVeMezo}
+              onValueChange={(val) => handleTotalChange(totalVeBtc, val)}
+              onMaxChange={setMaxVeMezo}
+            />
 
-        <SystemRow 
-          label="veBTC"
-          value={totalVeBtc}
-          max={maxVeBtc}
-          onValueChange={(val) => handleTotalChange(val, totalVeMezo)}
-          onMaxChange={setMaxVeBtc}
-        />
+            <SystemRow 
+              label="veBTC"
+              icon="/vebtc.svg"
+              value={totalVeBtc}
+              max={maxVeBtc}
+              onValueChange={(val) => handleTotalChange(val, totalVeMezo)}
+              onMaxChange={setMaxVeBtc}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Bottom Section: Boost */}
