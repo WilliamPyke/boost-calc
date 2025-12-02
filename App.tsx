@@ -8,7 +8,7 @@ import { LockState } from './types';
 // Initial constants
 const INITIAL_TOTAL_VEMEZO = 150000000;
 const INITIAL_TOTAL_VEBTC = 2933.3;
-const INITIAL_BTC = '2.00';
+const INITIAL_BTC = '21';
 const INITIAL_MEZO = '102273.89';
 
 const App = () => {
