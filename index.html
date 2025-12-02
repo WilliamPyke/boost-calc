@@ -4,9 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mezo veBoost Calculator</title>
+    <script>
+      // Apply dark mode immediately to prevent flash
+      (function() {
+        if (localStorage.getItem('theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
             colors: {
@@ -15,16 +24,16 @@
                 glow: '#ff3377',
               },
               surface: {
-                0: '#f8f8f8',
-                1: '#ffffff',
-                2: '#f4f4f5',
-                3: '#e4e4e7',
-                4: '#d4d4d8',
+                0: 'var(--surface-0)',
+                1: 'var(--surface-1)',
+                2: 'var(--surface-2)',
+                3: 'var(--surface-3)',
+                4: 'var(--surface-4)',
               },
               text: {
-                primary: '#09090b',
-                secondary: '#52525b',
-                muted: '#a1a1aa',
+                primary: 'var(--text-primary)',
+                secondary: 'var(--text-secondary)',
+                muted: 'var(--text-muted)',
               }
             },
             fontFamily: {
@@ -35,6 +44,7 @@
               'glow': '0 4px 40px -10px rgba(255, 0, 85, 0.15)',
               'glow-sm': '0 2px 12px -3px rgba(255, 0, 85, 0.25)',
               'card': '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 8px 30px -8px rgba(0, 0, 0, 0.08)',
+              'card-dark': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 8px 30px -8px rgba(0, 0, 0, 0.5)',
             }
           }
         }
@@ -42,11 +52,41 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-      body {
-        background: 
+      /* Light mode variables */
+      :root {
+        --surface-0: #f8f8f8;
+        --surface-1: #ffffff;
+        --surface-2: #f4f4f5;
+        --surface-3: #e4e4e7;
+        --surface-4: #d4d4d8;
+        --text-primary: #09090b;
+        --text-secondary: #52525b;
+        --text-muted: #a1a1aa;
+        --bg-gradient: 
           radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 0, 85, 0.06), transparent),
           radial-gradient(ellipse 60% 40% at 100% 100%, rgba(255, 0, 85, 0.04), transparent),
           #f8f8f8;
+      }
+      
+      /* Dark mode variables */
+      .dark {
+        --surface-0: #0a0a0b;
+        --surface-1: #141416;
+        --surface-2: #1c1c1f;
+        --surface-3: #27272a;
+        --surface-4: #3f3f46;
+        --text-primary: #fafafa;
+        --text-secondary: #a1a1aa;
+        --text-muted: #71717a;
+        --bg-gradient: 
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 0, 85, 0.12), transparent),
+          radial-gradient(ellipse 60% 40% at 100% 100%, rgba(255, 0, 85, 0.08), transparent),
+          #0a0a0b;
+      }
+      
+      body {
+        background: var(--bg-gradient);
+        transition: background 0.3s ease;
       }
       
       /* Custom Slider */
@@ -101,7 +141,7 @@
         background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #d4d4d8;
+        background: var(--surface-4);
         border-radius: 3px;
       }
     </style>

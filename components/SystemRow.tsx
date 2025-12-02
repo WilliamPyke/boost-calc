@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Slider } from './Slider';
-import { formatNumber, parseNumber } from '../utils';
+import { formatNumber, parseNumber, formatCompact, parseCompact } from '../utils';
 
 interface SystemRowProps {
   label: string;
@@ -19,6 +19,24 @@ export const SystemRow: FC<SystemRowProps> = ({
   onValueChange, 
   onMaxChange 
 }) => {
+  // Local state for max input to allow free typing
+  const [maxInput, setMaxInput] = useState(formatCompact(max));
+  const [isMaxFocused, setIsMaxFocused] = useState(false);
+
+  // Sync external max changes when not focused
+  useEffect(() => {
+    if (!isMaxFocused) {
+      setMaxInput(formatCompact(max));
+    }
+  }, [max, isMaxFocused]);
+
+  const handleMaxBlur = () => {
+    setIsMaxFocused(false);
+    const parsed = parseCompact(maxInput);
+    onMaxChange(parsed);
+    setMaxInput(formatCompact(parsed));
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
@@ -54,9 +72,11 @@ export const SystemRow: FC<SystemRowProps> = ({
           <span className="text-[9px] text-text-muted uppercase font-semibold tracking-wider font-display">Max</span>
           <input 
             type="text"
-            inputMode="decimal"
-            value={formatNumber(max)}
-            onChange={(e) => onMaxChange(parseNumber(e.target.value))}
+            inputMode="text"
+            value={maxInput}
+            onChange={(e) => setMaxInput(e.target.value)}
+            onFocus={() => setIsMaxFocused(true)}
+            onBlur={handleMaxBlur}
             className="w-16 text-right text-xs font-medium text-text-muted bg-surface-2 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-brand-pink font-mono"
           />
         </div>

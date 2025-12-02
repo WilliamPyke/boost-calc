@@ -44,7 +44,7 @@ export const Slider: FC<SliderProps> = ({ value, min, max, step = 0.01, onChange
         className={`absolute h-5 w-5 rounded-full z-10 pointer-events-none transition-all duration-75 ${
           disabled 
             ? 'bg-surface-3 border-2 border-surface-4' 
-            : 'bg-white shadow-lg ring-2 ring-brand-pink'
+            : 'bg-surface-1 shadow-lg ring-2 ring-brand-pink'
         }`}
         style={{ 
           left: `calc(${percentage}% - 10px)`

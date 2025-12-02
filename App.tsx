@@ -16,6 +16,26 @@ const App = () => {
   // State
   // --------------------------------------------------------------------------
   
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
+  
+  const toggleTheme = () => {
+    const newIsDark = !isDark;
+    setIsDark(newIsDark);
+    
+    if (newIsDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
+  
   const [lockState, setLockState] = useState<LockState>(LockState.MEZO);
   
   const [userMezo, setUserMezo] = useState<string>(INITIAL_MEZO);
@@ -148,17 +168,36 @@ const App = () => {
   return (
     <div className="w-full max-w-md">
       {/* Header */}
-      <div className="mb-6 px-1">
-        <h1 className="text-2xl font-bold tracking-tight text-text-primary font-display">
-          veBoost Calculator
-        </h1>
-        <p className="text-sm text-text-muted mt-1 font-display">
-          Calculate your optimal veMEZO and veBTC locks
-        </p>
+      <div className="mb-6 px-1 flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-text-primary font-display">
+            veBoost Calculator
+          </h1>
+          <p className="text-sm text-text-muted mt-1 font-display">
+            Calculate your optimal veMEZO and veBTC locks
+          </p>
+        </div>
+        
+        {/* Dark Mode Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-lg bg-surface-2 hover:bg-surface-3 transition-colors group"
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {isDark ? (
+            <svg className="w-5 h-5 text-text-muted group-hover:text-yellow-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5 text-text-muted group-hover:text-brand-pink transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          )}
+        </button>
       </div>
 
       {/* Main Card */}
-      <div className="relative bg-surface-1 rounded-2xl border border-surface-3 shadow-card overflow-hidden">
+      <div className="relative bg-surface-1 rounded-2xl border border-surface-3 shadow-card dark:shadow-card-dark overflow-hidden">
         <div className="relative z-10 p-6 flex flex-col gap-6">
           
           {/* Input Section */}

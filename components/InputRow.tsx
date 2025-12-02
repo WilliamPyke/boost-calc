@@ -40,7 +40,7 @@ export const InputRow: FC<InputRowProps> = ({
       <div className={`relative flex items-center rounded-xl overflow-hidden h-16 transition-all duration-200 ${
         readOnly 
           ? 'bg-surface-2 ring-1 ring-surface-3' 
-          : 'bg-white ring-2 ring-brand-pink/30 shadow-glow-sm'
+          : 'bg-surface-1 ring-2 ring-brand-pink/30 shadow-glow-sm'
       }`}>
         {/* Lock Button - Left side */}
         <button 
