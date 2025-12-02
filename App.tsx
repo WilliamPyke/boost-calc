@@ -60,7 +60,15 @@ const App = () => {
   
   // Collapsible section state
   const [systemTotalsOpen, setSystemTotalsOpen] = useState<boolean>(false);
-  const [explainerOpen, setExplainerOpen] = useState<boolean>(true);
+  const [explainerOpen, setExplainerOpen] = useState<boolean>(false);
+  
+  // Animate explainer open on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setExplainerOpen(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // --------------------------------------------------------------------------
   // Formulae
