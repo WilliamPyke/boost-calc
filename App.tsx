@@ -379,14 +379,8 @@ const App = () => {
       </div>
 
       {/* Explainer Side Panel */}
-      <div 
-        className={`transition-all duration-500 ease-out overflow-hidden w-full max-w-md lg:w-auto ${
-          explainerOpen 
-            ? 'lg:w-96 opacity-100 lg:translate-x-0 max-h-[2000px]' 
-            : 'lg:w-0 opacity-0 lg:translate-x-8 max-h-0 lg:max-h-none'
-        }`}
-      >
-        <div className="w-full lg:w-96 bg-surface-1 rounded-xl sm:rounded-2xl border border-surface-3 shadow-card dark:shadow-card-dark overflow-hidden">
+      <div className={`explainer-wrapper w-full max-w-md lg:flex-shrink-0 ${explainerOpen ? 'open' : 'closed'}`}>
+        <div className={`explainer-panel w-full lg:w-96 bg-surface-1 rounded-xl sm:rounded-2xl border border-surface-3 shadow-card dark:shadow-card-dark overflow-hidden ${explainerOpen ? 'open' : 'closed'}`}>
           {/* Panel Header */}
           <div className="flex justify-between items-center p-3 sm:p-4 border-b border-surface-3">
             <div className="flex items-center gap-2">
