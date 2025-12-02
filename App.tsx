@@ -473,7 +473,7 @@ const App = () => {
                 <h3 className="text-xs sm:text-sm font-semibold text-text-primary font-display">Unlock Both Values</h3>
               </div>
               <p className="text-[11px] sm:text-xs text-text-secondary leading-relaxed font-display">
-                Click both locks to unlock them. Now you can manually enter both veBTC and veMEZO amounts, 
+                Now you can manually enter both veBTC and veMEZO amounts, 
                 and the calculator will show you the resulting boost you'd receive.
               </p>
               <div className="mt-1.5 sm:mt-2 p-2 sm:p-3 bg-brand-pink/5 rounded-md sm:rounded-lg border border-brand-pink/20">

@@ -3,12 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Basic SEO -->
+    <meta name="description" content="Calculate your Mezo veBoost multiplier and optimize your staking rewards. See how lock duration affects your boost." />
+    <meta name="theme-color" content="#ff0055" />
+    
+    <!-- Open Graph (Facebook, Discord, Slack, LinkedIn, etc.) -->
+    <meta property="og:title" content="Mezo veBoost Calculator" />
+    <meta property="og:description" content="Calculate your Mezo veBoost multiplier and optimize your staking rewards." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://boost.mallard.sh" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mezo" />
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mezo veBoost Calculator" />
+    <meta name="twitter:description" content="Calculate your Mezo veBoost multiplier and optimize your staking rewards." />
+    <meta name="twitter:image" content="/og-image.png" />
+    
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Mezo veBoost Calculator</title>
     <script>
-      // Apply dark mode immediately to prevent flash
+      // Apply dark mode immediately to prevent flash (dark mode is default)
       (function() {
-        if (localStorage.getItem('theme') === 'dark') {
+        var theme = localStorage.getItem('theme');
+        // Default to dark mode unless explicitly set to light
+        if (theme !== 'light') {
           document.documentElement.classList.add('dark');
         }
       })();
