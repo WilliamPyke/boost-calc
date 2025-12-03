@@ -61,6 +61,7 @@ const App = () => {
   // Collapsible section state
   const [systemTotalsOpen, setSystemTotalsOpen] = useState<boolean>(false);
   const [explainerOpen, setExplainerOpen] = useState<boolean>(false);
+  const [disclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
   
   // Animate explainer open on mount
   useEffect(() => {
@@ -407,6 +408,40 @@ const App = () => {
             className="h-2.5 sm:h-3 opacity-60 group-hover:opacity-100 transition-opacity dark:invert-0 invert"
           />
         </a>
+        
+        {/* Disclaimer */}
+        <div className="mt-4 sm:mt-6">
+          <button
+            onClick={() => setDisclaimerOpen(!disclaimerOpen)}
+            className="w-full flex items-center justify-center gap-1.5 text-[10px] sm:text-xs text-text-muted/50 hover:text-text-muted transition-colors font-display"
+          >
+            <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>Disclaimer</span>
+            <svg 
+              className={`w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform duration-200 ${disclaimerOpen ? 'rotate-180' : ''}`}
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div 
+            className={`overflow-hidden transition-all duration-300 ease-out ${
+              disclaimerOpen ? 'max-h-96 opacity-100 mt-3' : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="px-3 py-3 bg-surface-2/50 rounded-lg border border-surface-3/50">
+              <p className="text-[9px] sm:text-[10px] text-text-muted/70 leading-relaxed font-display">
+                This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Explainer Side Panel */}
