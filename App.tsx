@@ -685,7 +685,7 @@ const App = () => {
             <img
               src="/lowpolyduck.png"
               alt="Low poly duck mascot"
-              className="w-20 sm:w-24 drop-shadow-lg select-none pointer-events-none"
+              className="w-[7.5rem] sm:w-[9rem] drop-shadow-lg select-none pointer-events-none"
             />
           </div>
 

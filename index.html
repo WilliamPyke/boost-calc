@@ -417,7 +417,13 @@
       /* Scrolling disclaimer marquee */
       .disclaimer-scroll {
         animation: scroll-left 40s linear infinite;
-        padding-left: 25vw; /* Start 25% from left edge, creating dead space */
+        display: inline-flex;
+        will-change: transform;
+      }
+      
+      .disclaimer-scroll > span {
+        flex-shrink: 0;
+        padding-right: 3rem;
       }
       
       .disclaimer-scroll:hover {
