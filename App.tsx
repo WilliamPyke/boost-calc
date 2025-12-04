@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { InputRow } from './components/InputRow';
 import { Slider } from './components/Slider';
 import { SystemRow } from './components/SystemRow';
@@ -17,6 +17,23 @@ const calcInitialMezo = () => {
   const btc = parseFloat(INITIAL_BTC);
   const boostCalc = INITIAL_BOOST - 1;
   return (boostCalc * INITIAL_TOTAL_VEMEZO * btc) / (4 * INITIAL_TOTAL_VEBTC);
+};
+
+const getRandomDuckPosition = (previous?: number) => {
+  let next = 10 + Math.random() * 80; // keep away from the very edges
+  if (previous !== undefined) {
+    let attempts = 0;
+    while (Math.abs(next - previous) < 10 && attempts < 5) {
+      next = 10 + Math.random() * 80;
+      attempts += 1;
+    }
+  }
+  return next;
+};
+
+const getRandomDuckRotation = () => {
+  // Keep upright with a playful wobble
+  return -12 + Math.random() * 24; // -12deg to +12deg
 };
 
 const App = () => {
@@ -62,6 +79,10 @@ const App = () => {
   const [systemTotalsOpen, setSystemTotalsOpen] = useState<boolean>(false);
   const [explainerOpen, setExplainerOpen] = useState<boolean>(false);
   const [disclaimerModalOpen, setDisclaimerModalOpen] = useState<boolean>(false);
+  const [duckPosition, setDuckPosition] = useState<number>(() => getRandomDuckPosition());
+  const [duckVisible, setDuckVisible] = useState<boolean>(true);
+  const [duckRotation, setDuckRotation] = useState<number>(() => getRandomDuckRotation());
+  const duckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Animate explainer open on mount
   useEffect(() => {
@@ -69,6 +90,14 @@ const App = () => {
       setExplainerOpen(true);
     }, 100);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (duckTimerRef.current) {
+        clearTimeout(duckTimerRef.current);
+      }
+    };
   }, []);
 
   // --------------------------------------------------------------------------
@@ -181,6 +210,27 @@ const App = () => {
     } else {
       setLockState(target);
     }
+  };
+
+  const moveDuckToRandomSpot = () => {
+    setDuckVisible(false);
+
+    if (duckTimerRef.current) {
+      clearTimeout(duckTimerRef.current);
+    }
+
+    duckTimerRef.current = setTimeout(() => {
+      setDuckPosition((prev) => getRandomDuckPosition(prev));
+      setDuckRotation(getRandomDuckRotation());
+      setDuckVisible(true);
+    }, 220);
+  };
+
+  const duckStyle = {
+    left: `${duckPosition}%`,
+    transform: `translate(-50%, ${duckVisible ? '12px' : '110%'}) rotate(${duckRotation}deg)`,
+    opacity: duckVisible ? 1 : 0,
+    transition: 'transform 240ms ease-in-out, opacity 200ms ease-in-out',
   };
 
   return (
@@ -584,27 +634,44 @@ const App = () => {
       </div>
       
       {/* Scrolling Disclaimer */}
-      <button 
-        onClick={() => setDisclaimerModalOpen(true)}
-        className="fixed bottom-0 left-0 right-0 bg-surface-1/95 backdrop-blur-sm border-t border-surface-3 py-2 overflow-hidden z-50 cursor-pointer hover:bg-surface-2/95 transition-colors"
-      >
-        <div className="disclaimer-scroll flex whitespace-nowrap">
-          <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
-            <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            DISCLAIMER: This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
-            <span className="ml-2 text-brand-pink/70">Click to read full disclaimer →</span>
-          </span>
-          <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
-            <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            DISCLAIMER: This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
-            <span className="ml-2 text-brand-pink/70">Click to read full disclaimer →</span>
-          </span>
+      <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+        <div className="relative w-full">
+          <div
+            className="absolute bottom-0 z-40 pointer-events-auto"
+            style={duckStyle}
+            onMouseEnter={moveDuckToRandomSpot}
+            onTouchStart={moveDuckToRandomSpot}
+          >
+            <img
+              src="/lowpolyduck.png"
+              alt="Low poly duck mascot"
+              className="w-20 sm:w-24 drop-shadow-lg select-none pointer-events-none"
+            />
+          </div>
+
+          <button 
+            onClick={() => setDisclaimerModalOpen(true)}
+            className="relative w-full bg-surface-1/95 backdrop-blur-sm border-t border-surface-3 py-2 overflow-hidden z-50 cursor-pointer hover:bg-surface-2/95 transition-colors pointer-events-auto"
+          >
+            <div className="disclaimer-scroll flex whitespace-nowrap">
+              <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
+                <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                DISCLAIMER: This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
+                <span className="ml-2 text-brand-pink/70">Click to read full disclaimer →</span>
+              </span>
+              <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
+                <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                DISCLAIMER: This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
+                <span className="ml-2 text-brand-pink/70">Click to read full disclaimer →</span>
+              </span>
+            </div>
+          </button>
         </div>
-      </button>
+      </div>
       
       {/* Disclaimer Modal */}
       {disclaimerModalOpen && (
