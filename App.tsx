@@ -80,8 +80,9 @@ const App = () => {
   const [explainerOpen, setExplainerOpen] = useState<boolean>(false);
   const [disclaimerModalOpen, setDisclaimerModalOpen] = useState<boolean>(false);
   const [duckPosition, setDuckPosition] = useState<number>(() => getRandomDuckPosition());
-  const [duckVisible, setDuckVisible] = useState<boolean>(true);
+  const [duckVisible, setDuckVisible] = useState<boolean>(false); // Start hidden for animation
   const [duckRotation, setDuckRotation] = useState<number>(() => getRandomDuckRotation());
+  const [pageLoaded, setPageLoaded] = useState<boolean>(false);
   const duckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const duckAutoMoveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const duckInteractingRef = useRef<boolean>(false);
@@ -91,6 +92,17 @@ const App = () => {
     const timer = setTimeout(() => {
       setExplainerOpen(true);
     }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Animate duck and disclaimer on page load
+  useEffect(() => {
+    // Small delay to ensure page is rendered
+    const timer = setTimeout(() => {
+      setPageLoaded(true);
+      // Animate duck in from bottom
+      setDuckVisible(true);
+    }, 300);
     return () => clearTimeout(timer);
   }, []);
 
@@ -258,7 +270,7 @@ const App = () => {
     left: `${duckPosition}%`,
     transform: `translate(-50%, ${duckVisible ? '12px' : '110%'}) rotate(${duckRotation}deg)`,
     opacity: duckVisible ? 1 : 0,
-    transition: 'transform 240ms ease-in-out, opacity 200ms ease-in-out',
+    transition: 'transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 400ms ease-out',
   };
 
   return (
@@ -679,8 +691,37 @@ const App = () => {
 
           <button 
             onClick={() => setDisclaimerModalOpen(true)}
-            className="relative w-full bg-surface-1/95 backdrop-blur-sm border-t border-surface-3 py-2 overflow-hidden z-50 cursor-pointer hover:bg-surface-2/95 transition-colors pointer-events-auto"
+            className={`relative w-full bg-surface-1/95 backdrop-blur-sm border-t border-surface-3 py-2 overflow-hidden z-50 cursor-pointer hover:bg-surface-2/95 transition-all duration-700 pointer-events-auto ${
+              pageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
           >
+            {/* Glassy shine effect - prismatic with varying intensity */}
+            <div 
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `linear-gradient(
+                  100deg,
+                  transparent 0%,
+                  transparent 30%,
+                  rgba(255,255,255,0.02) 38%,
+                  rgba(255,255,255,0.04) 44%,
+                  rgba(255,255,255,0.08) 50%,
+                  rgba(255,255,255,0.04) 56%,
+                  rgba(255,255,255,0.02) 62%,
+                  transparent 70%,
+                  transparent 100%
+                )`,
+                animation: 'shine 30s ease-in-out infinite',
+                animationDelay: '2s',
+                animationFillMode: 'backwards',
+              }}
+            />
+            <style>{`
+              @keyframes shine {
+                0% { transform: translateX(-100%) skewX(-15deg); }
+                100% { transform: translateX(100%) skewX(-15deg); }
+              }
+            `}</style>
             <div className="disclaimer-scroll flex whitespace-nowrap">
               <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
                 <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
