@@ -416,8 +416,8 @@
       
       /* Scrolling disclaimer marquee */
       .disclaimer-scroll {
-        animation: scroll-left 80s linear infinite;
-        padding-left: 100vw; /* Start off-screen to the right */
+        animation: scroll-left 40s linear infinite;
+        padding-left: 25vw; /* Start 25% from left edge, creating dead space */
       }
       
       .disclaimer-scroll:hover {
@@ -429,7 +429,7 @@
           transform: translateX(0);
         }
         100% {
-          transform: translateX(calc(-50% - 50vw));
+          transform: translateX(-50%);
         }
       }
     </style>
@@ -445,7 +445,7 @@
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="text-text-primary antialiased min-h-screen flex items-start sm:items-center justify-center px-3 py-4 pb-12 sm:p-6 sm:pb-12 overflow-x-hidden">
+  <body class="text-text-primary antialiased min-h-screen flex items-start sm:items-center justify-center px-3 py-4 sm:p-6 overflow-x-hidden">
     <!-- Northern Lights Aurora -->
     <div class="aurora-container">
       <div class="aurora-layer-1"></div>

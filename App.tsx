@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { InputRow } from './components/InputRow';
 import { Slider } from './components/Slider';
 import { SystemRow } from './components/SystemRow';
@@ -83,6 +83,8 @@ const App = () => {
   const [duckVisible, setDuckVisible] = useState<boolean>(true);
   const [duckRotation, setDuckRotation] = useState<number>(() => getRandomDuckRotation());
   const duckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const duckAutoMoveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const duckInteractingRef = useRef<boolean>(false);
   
   // Animate explainer open on mount
   useEffect(() => {
@@ -97,8 +99,47 @@ const App = () => {
       if (duckTimerRef.current) {
         clearTimeout(duckTimerRef.current);
       }
+      if (duckAutoMoveIntervalRef.current) {
+        clearInterval(duckAutoMoveIntervalRef.current);
+      }
     };
   }, []);
+
+  const moveDuckToRandomSpot = useCallback(() => {
+    setDuckVisible(false);
+
+    if (duckTimerRef.current) {
+      clearTimeout(duckTimerRef.current);
+    }
+
+    duckTimerRef.current = setTimeout(() => {
+      setDuckPosition((prev) => getRandomDuckPosition(prev));
+      setDuckRotation(getRandomDuckRotation());
+      setDuckVisible(true);
+      // Reset interaction flag after duck finishes moving
+      duckInteractingRef.current = false;
+    }, 220);
+  }, []);
+
+  const handleDuckInteraction = useCallback(() => {
+    duckInteractingRef.current = true;
+    moveDuckToRandomSpot();
+  }, [moveDuckToRandomSpot]);
+
+  // Auto-move duck every 30 seconds if not interacting
+  useEffect(() => {
+    duckAutoMoveIntervalRef.current = setInterval(() => {
+      if (!duckInteractingRef.current && duckVisible) {
+        moveDuckToRandomSpot();
+      }
+    }, 30000); // 30 seconds
+
+    return () => {
+      if (duckAutoMoveIntervalRef.current) {
+        clearInterval(duckAutoMoveIntervalRef.current);
+      }
+    };
+  }, [duckVisible, moveDuckToRandomSpot]);
 
   // --------------------------------------------------------------------------
   // Formulae
@@ -212,19 +253,6 @@ const App = () => {
     }
   };
 
-  const moveDuckToRandomSpot = () => {
-    setDuckVisible(false);
-
-    if (duckTimerRef.current) {
-      clearTimeout(duckTimerRef.current);
-    }
-
-    duckTimerRef.current = setTimeout(() => {
-      setDuckPosition((prev) => getRandomDuckPosition(prev));
-      setDuckRotation(getRandomDuckRotation());
-      setDuckVisible(true);
-    }, 220);
-  };
 
   const duckStyle = {
     left: `${duckPosition}%`,
@@ -639,8 +667,8 @@ const App = () => {
           <div
             className="absolute bottom-0 z-40 pointer-events-auto"
             style={duckStyle}
-            onMouseEnter={moveDuckToRandomSpot}
-            onTouchStart={moveDuckToRandomSpot}
+            onMouseEnter={handleDuckInteraction}
+            onTouchStart={handleDuckInteraction}
           >
             <img
               src="/lowpolyduck.png"
