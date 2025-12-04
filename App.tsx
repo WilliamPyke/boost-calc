@@ -61,7 +61,7 @@ const App = () => {
   // Collapsible section state
   const [systemTotalsOpen, setSystemTotalsOpen] = useState<boolean>(false);
   const [explainerOpen, setExplainerOpen] = useState<boolean>(false);
-  const [disclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
+  const [disclaimerModalOpen, setDisclaimerModalOpen] = useState<boolean>(false);
   
   // Animate explainer open on mount
   useEffect(() => {
@@ -409,39 +409,6 @@ const App = () => {
           />
         </a>
         
-        {/* Disclaimer */}
-        <div className="mt-4 sm:mt-6">
-          <button
-            onClick={() => setDisclaimerOpen(!disclaimerOpen)}
-            className="w-full flex items-center justify-center gap-1.5 text-[10px] sm:text-xs text-text-muted/50 hover:text-text-muted transition-colors font-display"
-          >
-            <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span>Disclaimer</span>
-            <svg 
-              className={`w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform duration-200 ${disclaimerOpen ? 'rotate-180' : ''}`}
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          
-          <div 
-            className={`overflow-hidden transition-all duration-300 ease-out ${
-              disclaimerOpen ? 'max-h-96 opacity-100 mt-3' : 'max-h-0 opacity-0'
-            }`}
-          >
-            <div className="px-3 py-3 bg-surface-2/50 rounded-lg border border-surface-3/50">
-              <p className="text-[9px] sm:text-[10px] text-text-muted/70 leading-relaxed font-display">
-                This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Explainer Side Panel */}
@@ -615,6 +582,94 @@ const App = () => {
           </div>
         </div>
       </div>
+      
+      {/* Scrolling Disclaimer */}
+      <button 
+        onClick={() => setDisclaimerModalOpen(true)}
+        className="fixed bottom-0 left-0 right-0 bg-surface-1/95 backdrop-blur-sm border-t border-surface-3 py-2 overflow-hidden z-50 cursor-pointer hover:bg-surface-2/95 transition-colors"
+      >
+        <div className="disclaimer-scroll flex whitespace-nowrap">
+          <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
+            <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            DISCLAIMER: This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
+            <span className="ml-2 text-brand-pink/70">Click to read full disclaimer →</span>
+          </span>
+          <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
+            <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            DISCLAIMER: This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
+            <span className="ml-2 text-brand-pink/70">Click to read full disclaimer →</span>
+          </span>
+        </div>
+      </button>
+      
+      {/* Disclaimer Modal */}
+      {disclaimerModalOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+          onClick={() => setDisclaimerModalOpen(false)}
+        >
+          <div 
+            className="bg-surface-1 rounded-xl sm:rounded-2xl border border-surface-3 shadow-card dark:shadow-card-dark max-w-lg w-full max-h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-4 border-b border-surface-3">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span className="text-sm font-semibold text-text-primary font-display">
+                  Disclaimer
+                </span>
+              </div>
+              <button 
+                onClick={() => setDisclaimerModalOpen(false)}
+                className="p-1.5 rounded-md hover:bg-surface-2 transition-colors text-text-muted hover:text-text-primary"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Modal Content */}
+            <div className="p-4 sm:p-6 overflow-y-auto max-h-[60vh]">
+              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-display">
+                This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice.
+              </p>
+              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-display mt-4">
+                You should consult with qualified financial professionals before making any financial decisions.
+              </p>
+              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-display mt-4">
+                Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results.
+              </p>
+              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-display mt-4">
+                All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided.
+              </p>
+              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-display mt-4">
+                Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment.
+              </p>
+              <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-display mt-4 font-semibold">
+                Any actions taken are done so at your own risk.
+              </p>
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-surface-3">
+              <button
+                onClick={() => setDisclaimerModalOpen(false)}
+                className="w-full py-2.5 px-4 bg-brand-pink hover:bg-brand-pink/90 text-white font-semibold rounded-lg transition-colors font-display text-sm"
+              >
+                I Understand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
