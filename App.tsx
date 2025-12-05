@@ -36,6 +36,11 @@ const getRandomDuckRotation = () => {
   return -12 + Math.random() * 24; // -12deg to +12deg
 };
 
+const getRandomDuckScale = () => {
+  // Slightly vary size between 90% and 110%
+  return 0.9 + Math.random() * 0.2;
+};
+
 const App = () => {
   // --------------------------------------------------------------------------
   // State
@@ -82,6 +87,7 @@ const App = () => {
   const [duckPosition, setDuckPosition] = useState<number>(() => getRandomDuckPosition());
   const [duckVisible, setDuckVisible] = useState<boolean>(false); // Start hidden for animation
   const [duckRotation, setDuckRotation] = useState<number>(() => getRandomDuckRotation());
+  const [duckScale, setDuckScale] = useState<number>(() => getRandomDuckScale());
   const duckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const duckAutoMoveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const duckInteractingRef = useRef<boolean>(false);
@@ -98,6 +104,7 @@ const App = () => {
   useEffect(() => {
     // Small delay to ensure page is rendered
     const timer = setTimeout(() => {
+      setDuckScale(getRandomDuckScale());
       setDuckVisible(true);
     }, 300);
     return () => clearTimeout(timer);
@@ -124,6 +131,7 @@ const App = () => {
     duckTimerRef.current = setTimeout(() => {
       setDuckPosition((prev) => getRandomDuckPosition(prev));
       setDuckRotation(getRandomDuckRotation());
+      setDuckScale(getRandomDuckScale());
       setDuckVisible(true);
       // Reset interaction flag after duck finishes moving
       duckInteractingRef.current = false;
@@ -265,7 +273,7 @@ const App = () => {
 
   const duckStyle = {
     left: `${duckPosition}%`,
-    transform: `translate(-50%, ${duckVisible ? '50%' : '110%'}) rotate(${duckRotation}deg)`,
+    transform: `translate(-50%, ${duckVisible ? '30%' : '110%'}) rotate(${duckRotation}deg) scale(${duckScale})`,
     opacity: duckVisible ? 1 : 0,
     transition: 'transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 400ms ease-out',
   };
