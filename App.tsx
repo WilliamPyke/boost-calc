@@ -82,7 +82,6 @@ const App = () => {
   const [duckPosition, setDuckPosition] = useState<number>(() => getRandomDuckPosition());
   const [duckVisible, setDuckVisible] = useState<boolean>(false); // Start hidden for animation
   const [duckRotation, setDuckRotation] = useState<number>(() => getRandomDuckRotation());
-  const [pageLoaded, setPageLoaded] = useState<boolean>(false);
   const duckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const duckAutoMoveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const duckInteractingRef = useRef<boolean>(false);
@@ -95,12 +94,10 @@ const App = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Animate duck and disclaimer on page load
+  // Animate duck in on page load
   useEffect(() => {
     // Small delay to ensure page is rendered
     const timer = setTimeout(() => {
-      setPageLoaded(true);
-      // Animate duck in from bottom
       setDuckVisible(true);
     }, 300);
     return () => clearTimeout(timer);
@@ -268,7 +265,7 @@ const App = () => {
 
   const duckStyle = {
     left: `${duckPosition}%`,
-    transform: `translate(-50%, ${duckVisible ? '12px' : '110%'}) rotate(${duckRotation}deg)`,
+    transform: `translate(-50%, ${duckVisible ? '50%' : '110%'}) rotate(${duckRotation}deg)`,
     opacity: duckVisible ? 1 : 0,
     transition: 'transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 400ms ease-out',
   };
@@ -499,6 +496,20 @@ const App = () => {
           />
         </a>
         
+        {/* Full Disclaimer */}
+        <div className="mt-3 sm:mt-4 mb-6 sm:mb-8 p-3 sm:p-4 bg-surface-2/50 rounded-lg border border-surface-3/50">
+          <div className="flex items-start gap-2">
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500/70 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div className="flex-1 min-w-0">
+              <p className="text-[9px] sm:text-[10px] text-text-muted/70 leading-relaxed font-display">
+                <span className="font-semibold text-text-muted/90">Disclaimer:</span> This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
+              </p>
+            </div>
+          </div>
+        </div>
+        
       </div>
 
       {/* Explainer Side Panel */}
@@ -673,9 +684,9 @@ const App = () => {
         </div>
       </div>
       
-      {/* Scrolling Disclaimer */}
+      {/* Duck Mascot */}
       <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
-        <div className="relative w-full">
+        <div className="relative w-full h-0">
           <div
             className="absolute bottom-0 z-40 pointer-events-auto"
             style={duckStyle}
@@ -688,57 +699,6 @@ const App = () => {
               className="w-[7.5rem] sm:w-[9rem] drop-shadow-lg select-none pointer-events-none"
             />
           </div>
-
-          <button 
-            onClick={() => setDisclaimerModalOpen(true)}
-            className={`relative w-full bg-surface-1/95 backdrop-blur-sm border-t border-surface-3 py-2 overflow-hidden z-50 cursor-pointer hover:bg-surface-2/95 transition-all duration-700 pointer-events-auto ${
-              pageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
-            {/* Glassy shine effect - prismatic with varying intensity */}
-            <div 
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: `linear-gradient(
-                  100deg,
-                  transparent 0%,
-                  transparent 30%,
-                  rgba(255,255,255,0.02) 38%,
-                  rgba(255,255,255,0.04) 44%,
-                  rgba(255,255,255,0.08) 50%,
-                  rgba(255,255,255,0.04) 56%,
-                  rgba(255,255,255,0.02) 62%,
-                  transparent 70%,
-                  transparent 100%
-                )`,
-                animation: 'shine 30s ease-in-out infinite',
-                animationDelay: '2s',
-                animationFillMode: 'backwards',
-              }}
-            />
-            <style>{`
-              @keyframes shine {
-                0% { transform: translateX(-100%) skewX(-15deg); }
-                100% { transform: translateX(100%) skewX(-15deg); }
-              }
-            `}</style>
-            <div className="disclaimer-scroll flex whitespace-nowrap">
-              <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
-                <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                DISCLAIMER: This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
-                <span className="ml-2 text-brand-pink/70">Click to read full disclaimer →</span>
-              </span>
-              <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs text-text-muted/60 font-display px-4">
-                <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                DISCLAIMER: This yield calculator and its results are provided for informational and illustrative purposes only and do not constitute financial, investment, legal, or tax advice. You should consult with qualified financial professionals before making any financial decisions. Cryptocurrency prices are volatile and subject to fluctuations in short periods. Historical yields, returns, and performance data do not guarantee future results. All calculations, projections, and estimates are based on currently available data and assumptions that may change at any time. We make no representations or warranties regarding the accuracy, completeness, or reliability of the information provided. Actual results may differ from calculated projections. Cryptocurrency investments carry substantial risk of loss, and you may lose some or all of your investment. Any actions taken are done so at your own risk.
-                <span className="ml-2 text-brand-pink/70">Click to read full disclaimer →</span>
-              </span>
-            </div>
-          </button>
         </div>
       </div>
       
