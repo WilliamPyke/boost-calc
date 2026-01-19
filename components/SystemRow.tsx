@@ -23,6 +23,10 @@ export const SystemRow: FC<SystemRowProps> = ({
   const [maxInput, setMaxInput] = useState(formatCompact(max));
   const [isMaxFocused, setIsMaxFocused] = useState(false);
 
+  // Local state for value input to allow decimal typing
+  const [inputValue, setInputValue] = useState(formatNumber(value));
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
   // Sync external max changes when not focused
   useEffect(() => {
     if (!isMaxFocused) {
@@ -30,11 +34,29 @@ export const SystemRow: FC<SystemRowProps> = ({
     }
   }, [max, isMaxFocused]);
 
+  // Sync external value changes when not focused
+  useEffect(() => {
+    if (!isInputFocused) {
+      setInputValue(formatNumber(value));
+    }
+  }, [value, isInputFocused]);
+
   const handleMaxBlur = () => {
     setIsMaxFocused(false);
     const parsed = parseCompact(maxInput);
     onMaxChange(parsed);
     setMaxInput(formatCompact(parsed));
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+    // Re-format on blur to ensure consistency
+    setInputValue(formatNumber(value));
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    onValueChange(parseNumber(e.target.value));
   };
 
   return (
@@ -49,8 +71,10 @@ export const SystemRow: FC<SystemRowProps> = ({
         <input 
           type="text"
           inputMode="decimal"
-          value={formatNumber(value)}
-          onChange={(e) => onValueChange(parseNumber(e.target.value))}
+          value={inputValue}
+          onChange={handleInputChange}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={handleInputBlur}
           className="w-24 sm:w-32 text-right text-xs sm:text-sm font-semibold tracking-tight tabular-nums bg-transparent text-text-secondary border-b border-transparent hover:border-surface-4 focus:border-brand-pink focus:text-text-primary focus:outline-none transition-colors p-0 font-mono"
         />
       </div>
