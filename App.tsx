@@ -6,8 +6,8 @@ import { formatNumber, parseNumber, clampBoost } from './utils';
 import { LockState } from './types';
 
 // Initial constants
-const INITIAL_TOTAL_VEMEZO = 150000000;
-const INITIAL_TOTAL_VEBTC = 2933.3;
+const INITIAL_TOTAL_VEMEZO = 25000000;
+const INITIAL_TOTAL_VEBTC = 100;
 const INITIAL_BTC = '21';
 const INITIAL_BOOST = 5.0;
 
