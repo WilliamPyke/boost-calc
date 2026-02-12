@@ -10,6 +10,8 @@ const INITIAL_TOTAL_VEMEZO = 25000000;
 const INITIAL_TOTAL_VEBTC = 100;
 const INITIAL_BTC = '21';
 const INITIAL_BOOST = 5.0;
+const SECRET_DUCK_ATTEMPTS = 5;
+const SECRET_HASH = 'c29d8c32a6bbd1f69066d6663296199ec6cd538439cc366c3d66a97f1b268895';
 
 // Calculate initial MEZO from BTC and target boost
 // Formula: Mezo = (Boost - 1) * TotalMEZO * UserBTC / (4 * TotalBTC)
@@ -88,6 +90,8 @@ const App = () => {
   const [duckVisible, setDuckVisible] = useState<boolean>(false); // Start hidden for animation
   const [duckRotation, setDuckRotation] = useState<number>(() => getRandomDuckRotation());
   const [duckScale, setDuckScale] = useState<number>(() => getRandomDuckScale());
+  const [duckCatchAttempts, setDuckCatchAttempts] = useState<number>(0);
+  const [secretHashRevealed, setSecretHashRevealed] = useState<boolean>(false);
   const duckTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const duckAutoMoveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const duckInteractingRef = useRef<boolean>(false);
@@ -121,6 +125,12 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (duckCatchAttempts >= SECRET_DUCK_ATTEMPTS) {
+      setSecretHashRevealed(true);
+    }
+  }, [duckCatchAttempts]);
+
   const moveDuckToRandomSpot = useCallback(() => {
     setDuckVisible(false);
 
@@ -139,7 +149,12 @@ const App = () => {
   }, []);
 
   const handleDuckInteraction = useCallback(() => {
+    if (duckInteractingRef.current) {
+      return;
+    }
+
     duckInteractingRef.current = true;
+    setDuckCatchAttempts((prev) => Math.min(prev + 1, SECRET_DUCK_ATTEMPTS));
     moveDuckToRandomSpot();
   }, [moveDuckToRandomSpot]);
 
@@ -279,9 +294,10 @@ const App = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 lg:gap-6 w-full transition-all duration-500 ease-out">
-      {/* Main Calculator */}
-      <div className={`w-full max-w-md transition-all duration-500 ease-out ${explainerOpen ? '' : ''}`}>
+    <div className="w-full flex flex-col items-center">
+      <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 lg:gap-6 w-full transition-all duration-500 ease-out">
+        {/* Main Calculator */}
+        <div className={`w-full max-w-md transition-all duration-500 ease-out ${explainerOpen ? '' : ''}`}>
         {/* Header */}
         <div className="mb-4 sm:mb-6 px-1 flex justify-between items-start">
           <div className="min-w-0 flex-1">
@@ -518,11 +534,11 @@ const App = () => {
           </div>
         </div>
         
-      </div>
+        </div>
 
-      {/* Explainer Side Panel */}
-      <div className={`explainer-wrapper w-full max-w-md lg:flex-shrink-0 ${explainerOpen ? 'open' : 'closed'}`}>
-        <div className={`explainer-panel w-full lg:w-96 bg-surface-1 rounded-xl sm:rounded-2xl border border-surface-3 shadow-card dark:shadow-card-dark overflow-hidden ${explainerOpen ? 'open' : 'closed'}`}>
+        {/* Explainer Side Panel */}
+        <div className={`explainer-wrapper w-full max-w-md lg:flex-shrink-0 ${explainerOpen ? 'open' : 'closed'}`}>
+          <div className={`explainer-panel w-full lg:w-96 bg-surface-1 rounded-xl sm:rounded-2xl border border-surface-3 shadow-card dark:shadow-card-dark overflow-hidden ${explainerOpen ? 'open' : 'closed'}`}>
           {/* Panel Header */}
           <div className="flex justify-between items-center p-3 sm:p-4 border-b border-surface-3">
             <div className="flex items-center gap-2">
@@ -689,9 +705,23 @@ const App = () => {
               </p>
             </div>
           </div>
+          </div>
         </div>
       </div>
-      
+
+      {/* Secret Hash Reveal */}
+      <div
+        className={`w-full max-w-[56rem] px-2 sm:px-4 text-center transition-all duration-[2200ms] ease-out ${
+          secretHashRevealed
+            ? 'opacity-45 translate-y-0 max-h-24 mt-2 sm:mt-4'
+            : 'opacity-0 translate-y-2 max-h-0 mt-0 overflow-hidden'
+        }`}
+      >
+        <p className="font-mono text-[10px] sm:text-xs text-text-muted break-all select-text">
+          {SECRET_HASH}
+        </p>
+      </div>
+
       {/* Duck Mascot */}
       <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
         <div className="relative w-full h-0">
