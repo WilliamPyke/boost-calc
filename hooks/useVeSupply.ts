@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 const VEBTC_ADDRESS = import.meta.env.VITE_VEBTC_ADDRESS ?? '0x3D4b1b884A7a1E59fE8589a3296EC8f8cBB6f279'
 const VEMEZO_ADDRESS = import.meta.env.VITE_VEMEZO_ADDRESS ?? '0xb90fdAd3DFD180458D62Cc6acedc983D78E20122'
 
-const MEZO_RPC_URL = import.meta.env.VITE_MEZO_RPC_URL ?? 'https://rpc.mezo.org'
+const MEZO_RPC_URL = import.meta.env.VITE_MEZO_RPC_URL ?? 'https://rpc-http.mezo.boar.network'
 
 // supply() function selector = first 4 bytes of keccak256("supply()")
 const SUPPLY_DATA = '0x047fc9aa'
