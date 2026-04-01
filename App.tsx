@@ -427,8 +427,8 @@ const App = () => {
 
                   {/* Tick — shown once after data loads, fades out */}
                   {(tickState === 'visible' || tickState === 'fading') && (
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
-                         stroke="#F7931A" strokeWidth="2.5"
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                         stroke="#22c55e" strokeWidth="2.5"
                          style={{
                            flexShrink: 0,
                            opacity: tickState === 'fading' ? 0 : 1,
