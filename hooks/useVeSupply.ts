@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 
 // Mezo mainnet VotingEscrow contract addresses
 // Full addresses from packages/shared/src/contracts/index.ts in the main webapp repo
-const VEBTC_ADDRESS = import.meta.env.VITE_VEBTC_ADDRESS ?? ''   // e.g. 0x3D4b...6f279
-const VEMEZO_ADDRESS = import.meta.env.VITE_VEMEZO_ADDRESS ?? ''  // e.g. 0xb90f...0122
+const VEBTC_ADDRESS = import.meta.env.VITE_VEBTC_ADDRESS ?? '0x3D4b1b884A7a1E59fE8589a3296EC8f8cBB6f279'
+const VEMEZO_ADDRESS = import.meta.env.VITE_VEMEZO_ADDRESS ?? '0xb90fdAd3DFD180458D62Cc6acedc983D78E20122'
 
 const MEZO_RPC_URL = import.meta.env.VITE_MEZO_RPC_URL ?? 'https://rpc.mezo.org'
 
