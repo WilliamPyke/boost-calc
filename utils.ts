@@ -3,10 +3,17 @@ export const formatNumber = (num: number | string): string => {
   const n = typeof num === 'string' ? parseFloat(num) : num;
   if (isNaN(n)) return '';
   
-  // Format with commas and up to 2 decimal places if needed
+  // Scale decimal places based on magnitude so small values (e.g. 0.00012 BTC) don't round to 0
+  const abs = Math.abs(n);
+  let maxDecimals = 2;
+  if (abs > 0 && abs < 1) {
+    // Find how many leading zeros after the decimal point, then show 2 significant digits
+    const leadingZeros = Math.max(0, -Math.floor(Math.log10(abs)));
+    maxDecimals = Math.min(8, leadingZeros + 2);
+  }
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: maxDecimals,
   }).format(n);
 };
 
