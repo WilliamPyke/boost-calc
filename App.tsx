@@ -4,6 +4,7 @@ import { Slider } from './components/Slider';
 import { SystemRow } from './components/SystemRow';
 import { formatNumber, parseNumber, clampBoost } from './utils';
 import { LockState } from './types';
+import useVeSupply from './hooks/useVeSupply';
 
 // Initial constants
 const INITIAL_TOTAL_VEMEZO = 25000000;
@@ -76,6 +77,12 @@ const App = () => {
   const [totalVeMezo, setTotalVeMezo] = useState<number>(INITIAL_TOTAL_VEMEZO);
   const [totalVeBtc, setTotalVeBtc] = useState<number>(INITIAL_TOTAL_VEBTC);
 
+  // Live on-chain supply
+  const veSupply = useVeSupply();
+  type TickState = 'loading' | 'visible' | 'fading' | 'hidden'
+  const [tickState, setTickState] = useState<TickState>('hidden');
+  const tickShownRef = useRef(false);
+
   // Initial max ranges for the sliders
   const [maxVeMezo, setMaxVeMezo] = useState<number>(500000000);
   const [maxVeBtc, setMaxVeBtc] = useState<number>(10000);
@@ -130,6 +137,30 @@ const App = () => {
       setSecretHashRevealed(true);
     }
   }, [duckCatchAttempts]);
+
+  // Tick state machine driven by live supply fetch status
+  useEffect(() => {
+    const { fetchStatus } = veSupply;
+    if (fetchStatus === 'idle') return;
+    if (fetchStatus === 'loading') { setTickState('loading'); return; }
+    if (fetchStatus === 'error') { setTickState('hidden'); return; }
+    // success
+    if (tickShownRef.current) return;
+    tickShownRef.current = true;
+    setTickState('visible');
+    const t1 = setTimeout(() => setTickState('fading'), 2000);
+    const t2 = setTimeout(() => setTickState('hidden'), 2300);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [veSupply.fetchStatus]);
+
+  // Update system totals from live on-chain data when it first arrives
+  useEffect(() => {
+    const { totalVeBtc: liveBtc, totalVeMezo: liveMezo } = veSupply;
+    if (liveBtc === undefined || liveMezo === undefined) return;
+    handleTotalChange(liveBtc, liveMezo);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [veSupply.totalVeBtc, veSupply.totalVeMezo]);
 
   const moveDuckToRandomSpot = useCallback(() => {
     setDuckVisible(false);
@@ -381,9 +412,33 @@ const App = () => {
                 onClick={() => setSystemTotalsOpen(!systemTotalsOpen)}
                 className="w-full flex justify-between items-center py-1 group"
               >
-                <span className="text-[10px] sm:text-xs font-semibold text-text-muted uppercase tracking-widest font-display">
+                <span className="text-[10px] sm:text-xs font-semibold text-text-muted uppercase tracking-widest font-display flex items-center gap-1.5">
                   System Totals
+
+                  {/* Spinner — shown while fetching live supply */}
+                  {tickState === 'loading' && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                         style={{ animation: 'spin 1s linear infinite', flexShrink: 0 }}>
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" style={{ opacity: 0.25 }} />
+                      <path fill="currentColor" style={{ opacity: 0.75 }}
+                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+                  )}
+
+                  {/* Tick — shown once after data loads, fades out */}
+                  {(tickState === 'visible' || tickState === 'fading') && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                         stroke="#F7931A" strokeWidth="2.5"
+                         style={{
+                           flexShrink: 0,
+                           opacity: tickState === 'fading' ? 0 : 1,
+                           transition: 'opacity 300ms ease',
+                         }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
                 </span>
+                <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
                 <svg 
                   className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-muted transition-transform duration-300 ${systemTotalsOpen ? 'rotate-180' : ''}`}
                   fill="none" 
