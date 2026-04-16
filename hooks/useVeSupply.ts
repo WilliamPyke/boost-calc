@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 // Mezo mainnet VotingEscrow contract addresses
 // Full addresses from packages/shared/src/contracts/index.ts in the main webapp repo
@@ -9,6 +9,10 @@ const MEZO_RPC_URL = import.meta.env.VITE_MEZO_RPC_URL ?? 'https://rpc-http.mezo
 
 // supply() function selector = first 4 bytes of keccak256("supply()")
 const SUPPLY_DATA = '0x047fc9aa'
+
+// Retry: starts at 2 s, doubles each attempt, caps at 30 s
+const BASE_RETRY_MS = 2000
+const MAX_RETRY_MS = 30000
 
 async function readSupply(address: string, rpcUrl: string): Promise<bigint> {
   const res = await fetch(rpcUrl, {
@@ -39,24 +43,46 @@ export default function useVeSupply(): VeSupply {
   const [totalVeBtc, setTotalVeBtc] = useState<number | undefined>(undefined)
   const [totalVeMezo, setTotalVeMezo] = useState<number | undefined>(undefined)
   const [fetchStatus, setFetchStatus] = useState<FetchStatus>('idle')
+  const cancelledRef = useRef(false)
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const attemptRef = useRef(0)
 
   useEffect(() => {
     if (!VEBTC_ADDRESS || !VEMEZO_ADDRESS) return
 
-    setFetchStatus('loading')
+    cancelledRef.current = false
+    attemptRef.current = 0
 
-    Promise.all([
-      readSupply(VEBTC_ADDRESS, MEZO_RPC_URL),
-      readSupply(VEMEZO_ADDRESS, MEZO_RPC_URL),
-    ])
-      .then(([btcRaw, mezoRaw]) => {
-        setTotalVeBtc(Number(btcRaw) / 1e18)
-        setTotalVeMezo(Number(mezoRaw) / 1e18)
-        setFetchStatus('success')
-      })
-      .catch(() => {
-        setFetchStatus('error')
-      })
+    const attempt = () => {
+      if (cancelledRef.current) return
+      setFetchStatus('loading')
+
+      Promise.all([
+        readSupply(VEBTC_ADDRESS, MEZO_RPC_URL),
+        readSupply(VEMEZO_ADDRESS, MEZO_RPC_URL),
+      ])
+        .then(([btcRaw, mezoRaw]) => {
+          if (cancelledRef.current) return
+          setTotalVeBtc(Number(btcRaw) / 1e18)
+          setTotalVeMezo(Number(mezoRaw) / 1e18)
+          setFetchStatus('success')
+        })
+        .catch(() => {
+          if (cancelledRef.current) return
+          setFetchStatus('error')
+          // Exponential backoff — minimum 2 s so the X has time to display
+          const delay = Math.min(BASE_RETRY_MS * Math.pow(2, attemptRef.current), MAX_RETRY_MS)
+          attemptRef.current += 1
+          retryTimerRef.current = setTimeout(attempt, delay)
+        })
+    }
+
+    attempt()
+
+    return () => {
+      cancelledRef.current = true
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current)
+    }
   }, [])
 
   return { totalVeBtc, totalVeMezo, fetchStatus }

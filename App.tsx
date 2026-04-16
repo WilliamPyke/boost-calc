@@ -7,8 +7,8 @@ import { LockState } from './types';
 import useVeSupply from './hooks/useVeSupply';
 
 // Initial constants
-const INITIAL_TOTAL_VEMEZO = 25000000;
-const INITIAL_TOTAL_VEBTC = 100;
+const INITIAL_TOTAL_VEMEZO = 100000000;
+const INITIAL_TOTAL_VEBTC = 400;
 const INITIAL_BTC = '21';
 const INITIAL_BOOST = 5.0;
 const SECRET_DUCK_ATTEMPTS = 5;
@@ -79,7 +79,7 @@ const App = () => {
 
   // Live on-chain supply
   const veSupply = useVeSupply();
-  type TickState = 'loading' | 'visible' | 'fading' | 'hidden'
+  type TickState = 'loading' | 'visible' | 'fading' | 'x-visible' | 'hidden'
   const [tickState, setTickState] = useState<TickState>('hidden');
   const tickShownRef = useRef(false);
 
@@ -143,7 +143,11 @@ const App = () => {
     const { fetchStatus } = veSupply;
     if (fetchStatus === 'idle') return;
     if (fetchStatus === 'loading') { setTickState('loading'); return; }
-    if (fetchStatus === 'error') { setTickState('hidden'); return; }
+    if (fetchStatus === 'error') {
+      setTickState('x-visible');
+      const t = setTimeout(() => setTickState('hidden'), 1000);
+      return () => clearTimeout(t);
+    }
     // success
     if (tickShownRef.current) return;
     tickShownRef.current = true;
@@ -436,6 +440,20 @@ const App = () => {
                          }}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
+                  )}
+
+                  {/* X — shown briefly on fetch failure, with tooltip */}
+                  {tickState === 'x-visible' && (
+                    <span className="relative group" style={{ lineHeight: 0, flexShrink: 0 }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                           stroke="#ef4444" strokeWidth="2.5"
+                           style={{ flexShrink: 0, display: 'block' }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded text-[10px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-surface-2 border border-surface-3 text-text-muted">
+                        these totals could not be fetched
+                      </span>
+                    </span>
                   )}
                 </span>
                 <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
